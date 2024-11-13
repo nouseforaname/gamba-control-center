@@ -16,7 +16,7 @@ void sensorLoop(void* pvParameters){
     vTaskDelay(100); // so other crap can get to RUN (IDLE TASK) and it can reset the watchdog 
   }
 }
-void renderLoop(){
+void renderLoop(void* pvParameters){
   for (;;) {
     getTFT()->drawString(s,0,0,4);
     handleAndDrawInput();
@@ -25,15 +25,23 @@ void renderLoop(){
 }
 void setup()
 {
-  water_init();
   init_display();
+  water_init();
   init_input();
 
   ESP_LOGI(main_tag,"app setup done");
   xTaskCreate(
     sensorLoop,     // Function to implement the task
     "sensors",   // Name of the task
-    10000,      // Stack size in bytes
+    4096,      // Stack size in bytes
+    NULL,      // Task input parameter
+    1,         // Priority of the task
+    NULL      // Task handle.
+  );
+  xTaskCreate(
+    renderLoop,     // Function to implement the task
+    "render",   // Name of the task
+    8192,      // Stack size in bytes
     NULL,      // Task input parameter
     1,         // Priority of the task
     NULL      // Task handle.
@@ -43,5 +51,4 @@ void setup()
 extern "C" void app_main() {
   // Set up the application
   setup();
-  renderLoop();
 }
