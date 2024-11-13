@@ -2,12 +2,10 @@
 #include "TFT_eSPI.h"
 #include "stdio.h"
 #include "Arduino.h"
-#include "hal/gpio_ll.h"
-#include "esp_adc/adc_cali.h"
-#include "pins.h"
-#include "water.h"
-#include "display.h"
-#define WAIT 100
+#include <water.h>
+#include <display.h>
+#include <input.h>
+#define WAIT 50
 
 unsigned long targetTime = 0; // Used for testing draw times
 TFT_eSPI tft = TFT_eSPI(320,240);
@@ -16,15 +14,10 @@ extern "C" void app_main() {
   // Set up the application
   setup();
   for (;;) {
-    printf("executing loop\n");
-    
     loop();
     yield();
-    // Loop forever
   }
 }
-
-
 
 void setup()
 {
@@ -33,6 +26,7 @@ void setup()
   pinMode(38, OUTPUT);  // Code Crashed without setting this. not totally sure why..
   digitalWrite(PWR_EN_PIN, HIGH);
 
+  water_init();
   tft.init();
   tft.setRotation(0);
   tft.fillScreen(TFT_BLACK);
@@ -57,8 +51,7 @@ void loop()
   tft.setTextSize(1);
 
   char s[14];
-  sprintf(s, "Wasser: %i", getWaterLevel());
-  tft.setTextPadding(tft.textWidth("Wasser: 000",4));                // extra whitespace required to override last digit of three digit value, 
+  sprintf(s, "Wasser: %03d", getWaterLevel());
   tft.drawString( s ,0,50, 4);
   delay(WAIT);
 
