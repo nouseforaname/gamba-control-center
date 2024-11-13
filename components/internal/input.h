@@ -8,12 +8,12 @@ typedef struct{
   uint16_t x;
   uint16_t y;
   uint16_t z;
-} position;
+} touchEvent;
 
 typedef struct r_buffer {
   size_t length;
   int8_t current;
-  position *pos;
+  touchEvent *pos;
 
   int8_t next(){
     current = current == length -1 ? 0 : current + 1; 
@@ -26,10 +26,10 @@ typedef struct r_buffer {
   int8_t last(){
     return current == 0 ? length -1 : current - 1;
   }
-  void setVal(position *input){
+  void setVal(touchEvent *input){
      pos[current] = *input;
   }
-  position * getVal(){
+  touchEvent * getVal(){
     return &pos[current];
   }
 } InputBuffer;
