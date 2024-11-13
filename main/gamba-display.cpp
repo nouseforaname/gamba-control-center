@@ -27,6 +27,7 @@ void setup()
   digitalWrite(PWR_EN_PIN, HIGH);
 
   water_init();
+  init_input();
   tft.init();
   tft.setRotation(0);
   tft.fillScreen(TFT_BLACK);
@@ -53,6 +54,10 @@ void loop()
   char s[14];
   sprintf(s, "Wasser: %03d", getWaterLevel());
   tft.drawString( s ,0,50, 4);
-  delay(WAIT);
 
+
+  handleAndDrawInput(tft);
+
+  delay(WAIT);
+ 
 }
