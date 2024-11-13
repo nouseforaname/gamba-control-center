@@ -1,0 +1,1 @@
+#define EXAMPLE_ADC1_CHAN0          ADC_CHANNEL_2

@@ -11,22 +11,81 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+
   };
 
   outputs = { self, nixpkgs, flake-utils, esp-dev }: 
    flake-utils.lib.eachDefaultSystem
       (system:
         let
+          inherit ( pkgs ) mkShell;
           pkgs = import nixpkgs {
-            overlays = [ (import esp-dev) ];
+            inherit system;
+            overlays = [ esp-dev.overlays.default ];
           };
-          # 👇 new! note that it refers to the path ./rust-toolchain.toml
+          arduino-core = pkgs.fetchFromGitHub {
+            owner = "espressif";
+            repo = "arduino-esp32";
+              rev = "3.0.2"; # this needs to be a version that works with the idf.py version ( in this case 5.1.3
+              hash = "sha256-Qi0qCJbjlhALFD2cljTCtmdekEVQCuH72BHWwKJXZdE=";
+             #rev = "3.0.0"; # this needs to be a version that works with the idf.py version ( in this case 5.1.3
+             #hash = "sha256-AV/uNUZ53WsG+LEfCl9EBUaFHA4MV4/YLlBNh3MEyf0=";
+          };
+          esp32s3-env =  pkgs.esp-idf-esp32.override {
+            toolsToInclude = [
+              "xtensa-esp32s3-elf"
+              "esp-clang"
+              "esp32ulp-elf"
+              "openocd-esp32"
+              "xtensa-esp-elf-gdb"
+            ];  #pkgs.lib.fakeSha256;
+            #rev = "v5.2.2";
+            #sha256 = "sha256-I4YxxSGdQT8twkoFx3zmZhyLTSagmeLD2pygVfY/pEk="; #pkgs.lib.fakeSha256;
+            rev = "v5.1.4";
+            sha256 = "sha256-WJIt0ixoD3lhLg5A/ILUhcGPd7oSlMn6e6xsgRGP2Kk=";
+           #rev = "v5.1.3";
+           #sha256 = "sha256-0QsIFOcSx1N15t5po3TyOaNvpzBUfKaFdsRODOBoXCI=";
+          };
+
+          display-sdk-src = pkgs.fetchFromGitHub {
+            owner = "Bodmer";
+            repo = "TFT_eSPI";
+            rev = "V2.5.43";
+            #hash = "sha256-+xjp3BkIMT/g2AA6TBXVBnns4uQjEArnsKYy76/NjnM=";
+            hash = "sha256-oLCK5KD+LYC2qAM5X/vG32JDrB9oCimu8ZobDcChskc=";
+            postFetch = ''
+            pushd $out
+              rm Kconfig
+              echo '
+set_source_files_properties(TFT_eSPI.cpp
+    PROPERTIES COMPILE_FLAGS
+    -Wno-error=misleading-indentation
+)' >> CMakeLists.txt
+              sed -i 's%//#include\(.*\)T_HMI.h%#include\1T_HMI.h%g' User_Setup_Select.h
+              sed -i '/"hal\/gpio_ll.h"/a #include "driver\/gpio.h"' Processors/TFT_eSPI_ESP32_S3.h
+            popd
+            '';
+          };
         in
-        with pkgs;
         {
-          devShells.default = mkShell {
-            # 👇 we can just use `rustToolchain` here:
-            buildInputs = [ ];
+          devShells.default = mkShell  {
+            nativeBuildInputs = [ esp32s3-env arduino-core display-sdk-src ];
+            buildInputs = [ esp32s3-env arduino-core display-sdk-src ];
+
+            shellHook = ''
+mkdir -p components
+rm -rf components/*
+ln -fs ${arduino-core} components/arduino
+ln -fs ${display-sdk-src} components/display
+ESP32S3_TOOLING=$(dirname $(dirname $(which xtensa-esp32s3-elf-ar)))
+cat << EOF > .clangd
+CompileFlags:
+  Add: [-mlong-calls, -isysroot=$ESP32S3_TOOLING ]
+  Remove: [-fno-tree-switch-conversion, -mtext-section-literals, -mlongcalls, -fstrict-volatile-bitfields]
+EOF
+          '';
+            DISPLAY_SDK_SRC = display-sdk-src;
+            ARDUINO_CORE_SDK = arduino-core;
           };
         }
       );
