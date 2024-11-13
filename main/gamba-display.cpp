@@ -36,10 +36,6 @@ void setup()
   setBrightness(brightness);
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  
-  //setup waterlevel sensor. it's a voltage divider & resistor setup 
-  pinMode(PIN_DAC1, INPUT); //It is necessary to declare the input pin
-  analogSetPinAttenuation(PIN_DAC1,ADC_0db);
 }
 
 bool flip = true;
