@@ -1,12 +1,12 @@
 #include "pins.h"
-#include "TFT_eSPI.h"/* Please use the TFT library provided in the library. */
-#include "logo.h"
+#include "TFT_eSPI.h"
 #include "stdio.h"
 #include "Arduino.h"
-//#include "hal/gpio_ll.h"
-
-#include "esp_adc_cal.h"
-
+#include "hal/gpio_ll.h"
+#include "esp_adc/adc_cali.h"
+#include "pins.h"
+#include "water.h"
+#include "display.h"
 #define WAIT 100
 
 unsigned long targetTime = 0; // Used for testing draw times
