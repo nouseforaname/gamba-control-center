@@ -1,7 +1,6 @@
 #include "pins.h"
 #include <SPI.h>
 #include <Arduino.h>
-#include "internal/input_data.h"
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
 #include <stdio.h>
