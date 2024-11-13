@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include <lib/water.h>
 #include <display.h>
-#include <input.h>
+#include <lib/input.h>
 #define WAIT 50
 
 unsigned long targetTime = 0; // Used for testing draw times
