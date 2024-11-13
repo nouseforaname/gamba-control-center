@@ -5,10 +5,9 @@
 #include <lib/water.h>
 #include <lib/input.h>
 #include <lib/display.h>
-#define WAIT 50
-
-unsigned long targetTime = 0; // Used for testing draw times
-TFT_eSPI tft = TFT_eSPI(320,240);
+#include <esp_log.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 extern "C" void app_main() {
   // Set up the application
@@ -41,6 +40,15 @@ void setup()
   water_init();
   init_display();
   init_input();
+  ESP_LOGI(log_tag,"app setup done");
+  xTaskCreate(
+    readSensors,     // Function to implement the task
+    "loop2",   // Name of the task
+    1000,      // Stack size in bytes
+    NULL,      // Task input parameter
+    0,         // Priority of the task
+    NULL      // Task handle.
+  );
 }
 
 
