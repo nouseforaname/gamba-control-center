@@ -40,10 +40,9 @@ TFT_eSPI *getTFT(){
 
 void init_display() {
   // BACKLIGHT PIN
-  gpio_set_direction(GPIO_NUM_10, GPIO_MODE_OUTPUT);
-  gpio_pad_select_gpio(GPIO_NUM_38);
-  gpio_set_direction(GPIO_NUM_38, GPIO_MODE_OUTPUT);
-  digitalWrite(BK_LIGHT_PIN, 1);
+  pinMode(PWR_EN_PIN, OUTPUT);
+  pinMode(BK_LIGHT_PIN, OUTPUT);  // Code Crashed without setting this. not totally sure why..
+  digitalWrite(PWR_EN_PIN, HIGH);
 
   tft.init();
   tft.setRotation(0);
@@ -52,5 +51,5 @@ void init_display() {
   uint8_t brightness = 16;
   setBrightness(brightness);
   tft.fillScreen(TFT_BLACK);
-  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.setTextColor(TFT_GREEN);
 }
