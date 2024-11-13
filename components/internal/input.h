@@ -4,11 +4,12 @@
 #include <stdint.h>
 #include <limits.h>
 
-struct position {
+typedef struct{
   uint16_t x;
   uint16_t y;
   uint16_t z;
-};
+} position;
+
 typedef struct r_buffer {
   size_t length;
   int8_t current;
@@ -25,14 +26,13 @@ typedef struct r_buffer {
   int8_t last(){
     return current == 0 ? length -1 : current - 1;
   }
-  void setVal(position input){
-     pos[current] = input;
+  void setVal(position *input){
+     pos[current] = *input;
   }
   position * getVal(){
     return &pos[current];
   }
 } InputBuffer;
-
 
 void init_input();
 void handleAndDrawInput();
