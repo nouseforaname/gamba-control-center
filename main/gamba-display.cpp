@@ -1,13 +1,10 @@
 #include <settings.h>
-#include "TFT_eSPI.h"
-#include "stdio.h"
-#include "Arduino.h"
-#include <lib/water.h>
-#include <lib/input.h>
-#include <lib/display.h>
-#include <esp_log.h>
+#include "components/internal/input.h"
+#include "components/internal/water.h"
+#include "components/internal/display.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include <esp_log.h>
 
 extern "C" void app_main() {
   // Set up the application
