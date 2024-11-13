@@ -2,7 +2,7 @@
 #include "TFT_eSPI.h"
 #include "stdio.h"
 #include "Arduino.h"
-#include <water.h>
+#include <lib/water.h>
 #include <display.h>
 #include <input.h>
 #define WAIT 50
@@ -16,6 +16,18 @@ extern "C" void app_main() {
   for (;;) {
     loop();
     yield();
+  }
+}
+
+char log_tag[] = "main";
+static char s[14]="";
+
+void readSensors(void* pvParameters){
+  for (;;) {
+
+    sprintf(s, "Wasser: %03d", getWaterLevel());
+    delay(WAIT);
+
   }
 }
 
@@ -47,13 +59,10 @@ void loop()
   targetTime = millis();
   tft.setTextSize(1);
 
-  char s[14];
-  sprintf(s, "Wasser: %03d", getWaterLevel());
-  tft.drawString( s ,0,50, 4);
 
 
   handleAndDrawInput(tft);
 
   delay(WAIT);
- 
+
 }
