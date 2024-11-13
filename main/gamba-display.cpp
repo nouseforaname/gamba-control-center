@@ -1,4 +1,4 @@
-#include "pins.h"
+#include <settings.h>
 #include "TFT_eSPI.h"
 #include "stdio.h"
 #include "Arduino.h"
@@ -50,8 +50,7 @@ void setup()
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
 }
 
-bool flip = true;
-uint8_t rotation = 0;
+
 void loop()
 {
   tft.resetViewport();

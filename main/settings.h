@@ -1,10 +1,17 @@
 #pragma once
 
+#define WAIT 50
+
 #define PWR_EN_PIN  (10)
 #define PWR_ON_PIN  (14)
 #define BAT_ADC_PIN (5)
 #define BUTTON1_PIN (0)
 #define BUTTON2_PIN (21)
+// UI
+
+#define FONT_COLOR (0xFFFF)
+#define BACKGROUND_COLOR (0x0000)
+#define MAX_MEASUREMENTS 25
 
 // lcd
 #define LCD_DATA0_PIN (48)
