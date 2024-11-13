@@ -25,7 +25,7 @@ uint8_t getWaterLevel() {
   float factor = (float)v/4095;
   uint8_t percent = 100 * factor; // 10% steps are enough...
   
-  ESP_LOGI(water_tag, "calculated %i", percent);
+  ESP_LOGD(water_tag, "calculated %i", percent);
   if (percent > 100) {
     return 0;
   }
