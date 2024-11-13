@@ -3,8 +3,8 @@
 #include "stdio.h"
 #include "Arduino.h"
 #include <lib/water.h>
-#include <display.h>
 #include <lib/input.h>
+#include <lib/display.h>
 #define WAIT 50
 
 unsigned long targetTime = 0; // Used for testing draw times
@@ -39,27 +39,13 @@ void setup()
   digitalWrite(PWR_EN_PIN, HIGH);
 
   water_init();
+  init_display();
   init_input();
-  tft.init();
-  tft.setRotation(0);
-  tft.fillScreen(TFT_BLACK);
-  // Set backlight level, range 0 ~ 16
-  uint8_t brightness = 16; 
-  setBrightness(brightness);
-  tft.fillScreen(TFT_BLACK);
-  tft.setTextColor(TFT_GREEN, TFT_BLACK);
 }
 
 
 void loop()
 {
-  tft.resetViewport();
-  tft.setRotation(rotation);
-  targetTime = millis();
-  tft.setTextSize(1);
-
-
-
   handleAndDrawInput(tft);
 
   delay(WAIT);
