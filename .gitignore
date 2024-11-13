@@ -1,4 +1,7 @@
 .direnv
-components
+# i do not want to manage these via idf.py, they are injected via the flake..
+components/touch
+components/display
+components/arduino
 managed_components
 build

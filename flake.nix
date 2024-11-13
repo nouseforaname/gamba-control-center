@@ -90,7 +90,6 @@ EOF
 
             shellHook = ''
 mkdir -p components
-rm -rf components/*
 ln -fs ${arduino-core} components/arduino
 ln -fs ${display-sdk-src} components/display
 ln -fs ${touch} components/touch
